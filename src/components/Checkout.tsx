@@ -95,7 +95,7 @@ ${serviceType === 'delivery' ? `🛵 DELIVERY FEE:` : ''}
 
 ${notes ? `📝 Notes: ${notes}` : ''}
 
-Please confirm this order to proceed. Thank you for choosing Yong Convenient Store! 🥟
+Please confirm this order to proceed. Thank you for choosing Yong Convenience Store! 🥟
     `.trim();
 
     const encodedMessage = encodeURIComponent(orderDetails);
