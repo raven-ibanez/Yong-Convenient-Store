@@ -3,6 +3,8 @@ import { MenuItem, CartItem } from '../types';
 import { useCategories } from '../hooks/useCategories';
 import MenuItemCard from './MenuItemCard';
 import MobileNav from './MobileNav';
+import PromoBanner from './PromoBanner';
+import { Package, Truck, ShoppingCart, Heart, ShoppingBag, Stethoscope, Shirt, Dog } from 'lucide-react';
 
 // Preload images for better performance
 const preloadImages = (items: MenuItem[]) => {
@@ -91,44 +93,123 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
         activeCategory={activeCategory}
         onCategoryClick={handleCategoryClick}
       />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-noto font-semibold text-black mb-4">Our Menu</h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Discover our selection of authentic dim sum, flavorful noodles, and traditional Asian dishes, 
-          all prepared with fresh ingredients and authentic techniques.
-        </p>
-      </div>
+      <main className="px-4 sm:px-6 lg:px-8 py-6">
+        {/* Promotional Banners Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+          {/* Main Promo Banner - Pickup Highlight */}
+          <div className="lg:col-span-2">
+            <PromoBanner
+              title="PICK-UP HIGHLIGHT"
+              subtitle="GET P200 OFF WHEN YOU PICK UP YOUR ORDER!"
+              code="PICKUPSEPTEMBER"
+              promoDates="September 15 & 30"
+              minPurchase="P1,500"
+              bgColor="bg-orange-500"
+              textColor="text-white"
+              image={
+                <div className="flex items-center space-x-4">
+                  <Package className="h-32 w-32" />
+                  <ShoppingCart className="h-32 w-32" />
+                </div>
+              }
+              className="h-full"
+            />
+          </div>
 
-      {categories.map((category) => {
-        const categoryItems = menuItems.filter(item => item.category === category.id);
-        
-        if (categoryItems.length === 0) return null;
-        
-        return (
-          <section key={category.id} id={category.id} className="mb-16">
-            <div className="flex items-center mb-8">
-              <span className="text-3xl mr-3">{category.icon}</span>
-              <h3 className="text-3xl font-noto font-medium text-black">{category.name}</h3>
+          {/* Delivery Schedule */}
+          <div className="space-y-4">
+            <PromoBanner
+              title="Delivery Schedule"
+              subtitle="Orders received before 11am Same Day Delivery"
+              bgColor="bg-blue-500"
+              textColor="text-white"
+              image={<Truck className="h-24 w-24" />}
+              className="text-sm"
+            />
+          </div>
+        </div>
+
+        {/* Payday Specials Banner */}
+        <div className="mb-8">
+          <PromoBanner
+            title="PAYDAY SPECIALS"
+            subtitle="FREE DELIVERY"
+            code="SAHODNASEP"
+            promoDates="on September 15 and 30, 2025 with a min. spend of P3,000"
+            bgColor="bg-red-600"
+            textColor="text-white"
+            image={<ShoppingBag className="h-32 w-32" />}
+            className="w-full"
+          />
+        </div>
+
+        {/* Department Tiles */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {/* Grocery Shopping */}
+          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+            <div className="aspect-square bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+              <ShoppingCart className="h-16 w-16 text-white opacity-50" />
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categoryItems.map((item) => {
-                const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
-                return (
-                  <MenuItemCard
-                    key={item.id}
-                    item={item}
-                    onAddToCart={addToCart}
-                    quantity={cartItem?.quantity || 0}
-                    onUpdateQuantity={updateQuantity}
-                  />
-                );
-              })}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold text-sm">Grocery Shopping</p>
             </div>
-          </section>
-        );
-      })}
+          </div>
+
+          {/* Pharmacy */}
+          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+            <div className="aspect-square bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+              <Stethoscope className="h-16 w-16 text-white opacity-50" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold text-sm">HB1+ PHARMACY</p>
+            </div>
+          </div>
+
+          {/* Department Store */}
+          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+            <div className="aspect-square bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+              <Shirt className="h-16 w-16 text-white opacity-50" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold text-sm">Department Store</p>
+            </div>
+          </div>
+
+          {/* Pet Supplies */}
+          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+            <div className="aspect-square bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+              <Dog className="h-16 w-16 text-white opacity-50" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+              <p className="text-white font-semibold text-sm">Pet Supplies</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Menu Items by Category */}
+        <div className="mb-8">
+          <div className="flex items-center mb-6">
+            <span className="text-2xl mr-3">{categories.find(c => c.id === activeCategory)?.icon || '🍽️'}</span>
+            <h3 className="text-2xl font-semibold text-gray-900">
+              {categories.find(c => c.id === activeCategory)?.name || 'Our Menu'}
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {menuItems.map((item) => {
+              const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
+              return (
+                <MenuItemCard
+                  key={item.id}
+                  item={item}
+                  onAddToCart={addToCart}
+                  quantity={cartItem?.quantity || 0}
+                  onUpdateQuantity={updateQuantity}
+                />
+              );
+            })}
+          </div>
+        </div>
       </main>
     </>
   );
