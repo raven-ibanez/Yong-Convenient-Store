@@ -8,6 +8,7 @@ import Menu from './components/Menu';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import FloatingCartButton from './components/FloatingCartButton';
+import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
 import { useMenu } from './hooks/useMenu';
 import { useCategories } from './hooks/useCategories';
@@ -185,6 +186,9 @@ function MainApp() {
           onCartClick={() => handleViewChange('cart')}
         />
       )}
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
