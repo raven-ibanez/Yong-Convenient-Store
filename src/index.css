@@ -52,3 +52,37 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 1023px) {
+  /* Ensure proper mobile layout */
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  /* Better touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better mobile spacing */
+  .mobile-padding {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Ensure mobile navigation is properly positioned */
+@media (max-width: 1023px) {
+  .mobile-nav {
+    position: sticky;
+    top: 4rem; /* 64px */
+    z-index: 40;
+  }
+}

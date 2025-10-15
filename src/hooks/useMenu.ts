@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { MenuItem } from '../types';
+import { menuData } from '../data/menuData';
 
 export const useMenu = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -70,6 +71,10 @@ export const useMenu = () => {
     } catch (err) {
       console.error('Error fetching menu items:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch menu items');
+      
+      // Fallback to sample data if database fetch fails
+      console.log('Using fallback sample data');
+      setMenuItems(menuData);
     } finally {
       setLoading(false);
     }

@@ -95,11 +95,11 @@ ${serviceType === 'delivery' ? `🛵 DELIVERY FEE:` : ''}
 
 ${notes ? `📝 Notes: ${notes}` : ''}
 
-Please confirm this order to proceed. Thank you for choosing ClickEats! 🥟
+Please confirm this order to proceed. Thank you for choosing Yong Convenient Store! 🥟
     `.trim();
 
     const encodedMessage = encodeURIComponent(orderDetails);
-    const messengerUrl = `https://m.me/61579693577478?text=${encodedMessage}`;
+    const messengerUrl = `https://m.me/711554648708892?text=${encodedMessage}`;
     
     window.open(messengerUrl, '_blank');
     

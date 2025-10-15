@@ -2,9 +2,8 @@ import React from 'react';
 import { MenuItem, CartItem } from '../types';
 import { useCategories } from '../hooks/useCategories';
 import MenuItemCard from './MenuItemCard';
-import MobileNav from './MobileNav';
 import PromoBanner from './PromoBanner';
-import { Package, Truck, ShoppingCart, Heart, ShoppingBag, Stethoscope, Shirt, Dog } from 'lucide-react';
+import { Package, Truck, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 // Preload images for better performance
 const preloadImages = (items: MenuItem[]) => {
@@ -21,9 +20,12 @@ interface MenuProps {
   addToCart: (item: MenuItem, quantity?: number, variation?: any, addOns?: any[]) => void;
   cartItems: CartItem[];
   updateQuantity: (id: string, quantity: number) => void;
+  selectedCategory: string;
+  searchTerm?: string;
+  onCategoryClick?: (categoryId: string) => void;
 }
 
-const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity }) => {
+const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory, searchTerm = '', onCategoryClick }) => {
   const { categories } = useCategories();
   const [activeCategory, setActiveCategory] = React.useState('hot-coffee');
 
@@ -44,18 +46,21 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId);
-    const element = document.getElementById(categoryId);
-    if (element) {
-      const headerHeight = 64; // Header height
-      const mobileNavHeight = 60; // Mobile nav height
-      const offset = headerHeight + mobileNavHeight + 20; // Extra padding
-      const elementPosition = element.offsetTop - offset;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
+    
+    // Scroll to products section after a short delay to allow category selection to update
+    setTimeout(() => {
+      const productsSection = document.querySelector('[data-section="products"]');
+      if (productsSection) {
+        const headerHeight = 80; // Header height
+        const offset = headerHeight + 20; // Extra padding
+        const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+        
+        window.scrollTo({
+          top: elementPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   React.useEffect(() => {
@@ -88,14 +93,9 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
 
   return (
-    <>
-      <MobileNav 
-        activeCategory={activeCategory}
-        onCategoryClick={handleCategoryClick}
-      />
-      <main className="px-4 sm:px-6 lg:px-8 py-6">
+    <main className="px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
         {/* Promotional Banners Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
           {/* Main Promo Banner - Pickup Highlight */}
           <div className="lg:col-span-2">
             <PromoBanner
@@ -107,9 +107,9 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               bgColor="bg-orange-500"
               textColor="text-white"
               image={
-                <div className="flex items-center space-x-4">
-                  <Package className="h-32 w-32" />
-                  <ShoppingCart className="h-32 w-32" />
+                <div className="flex items-center space-x-2 lg:space-x-4">
+                  <Package className="h-16 w-16 lg:h-32 lg:w-32" />
+                  <ShoppingCart className="h-16 w-16 lg:h-32 lg:w-32" />
                 </div>
               }
               className="h-full"
@@ -117,20 +117,20 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           </div>
 
           {/* Delivery Schedule */}
-          <div className="space-y-4">
+          <div className="space-y-3 lg:space-y-4">
             <PromoBanner
               title="Delivery Schedule"
               subtitle="Orders received before 11am Same Day Delivery"
               bgColor="bg-blue-500"
               textColor="text-white"
-              image={<Truck className="h-24 w-24" />}
+              image={<Truck className="h-12 w-12 lg:h-24 lg:w-24" />}
               className="text-sm"
             />
           </div>
         </div>
 
         {/* Payday Specials Banner */}
-        <div className="mb-8">
+        <div className="mb-6 lg:mb-8">
           <PromoBanner
             title="PAYDAY SPECIALS"
             subtitle="FREE DELIVERY"
@@ -138,80 +138,209 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
             promoDates="on September 15 and 30, 2025 with a min. spend of P3,000"
             bgColor="bg-red-600"
             textColor="text-white"
-            image={<ShoppingBag className="h-32 w-32" />}
+            image={<ShoppingBag className="h-16 w-16 lg:h-32 lg:w-32" />}
             className="w-full"
           />
         </div>
 
-        {/* Department Tiles */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {/* Grocery Shopping */}
-          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-            <div className="aspect-square bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-              <ShoppingCart className="h-16 w-16 text-white opacity-50" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-              <p className="text-white font-semibold text-sm">Grocery Shopping</p>
-            </div>
-          </div>
-
-          {/* Pharmacy */}
-          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-            <div className="aspect-square bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-              <Stethoscope className="h-16 w-16 text-white opacity-50" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-              <p className="text-white font-semibold text-sm">HB1+ PHARMACY</p>
-            </div>
-          </div>
-
-          {/* Department Store */}
-          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-            <div className="aspect-square bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
-              <Shirt className="h-16 w-16 text-white opacity-50" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-              <p className="text-white font-semibold text-sm">Department Store</p>
-            </div>
-          </div>
-
-          {/* Pet Supplies */}
-          <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-            <div className="aspect-square bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-              <Dog className="h-16 w-16 text-white opacity-50" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-              <p className="text-white font-semibold text-sm">Pet Supplies</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Menu Items by Category */}
-        <div className="mb-8">
-          <div className="flex items-center mb-6">
-            <span className="text-2xl mr-3">{categories.find(c => c.id === activeCategory)?.icon || '🍽️'}</span>
-            <h3 className="text-2xl font-semibold text-gray-900">
-              {categories.find(c => c.id === activeCategory)?.name || 'Our Menu'}
-            </h3>
+        {/* Featured Categories Preview */}
+        <div className="mb-6 lg:mb-8">
+          <div className="flex items-center justify-between mb-4 lg:mb-6">
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Featured Categories</h2>
+            <button className="text-blue-600 hover:text-blue-700 text-xs lg:text-sm font-semibold">
+              View All Categories
+            </button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {menuItems.map((item) => {
-              const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
-              return (
-                <MenuItemCard
-                  key={item.id}
-                  item={item}
-                  onAddToCart={addToCart}
-                  quantity={cartItem?.quantity || 0}
-                  onUpdateQuantity={updateQuantity}
-                />
-              );
-            })}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+            {/* Featured Category Cards */}
+            <div 
+              onClick={() => {
+                onCategoryClick?.('breads-spreads-oats-cereals');
+                setTimeout(() => {
+                  const productsSection = document.querySelector('[data-section="products"]');
+                  if (productsSection) {
+                    const headerHeight = 80;
+                    const offset = headerHeight + 20;
+                    const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({
+                      top: elementPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 100);
+              }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-3 lg:p-6 cursor-pointer group hover:scale-105"
+            >
+              <div className="text-center">
+                <div className="text-2xl lg:text-4xl mb-2 lg:mb-3 group-hover:scale-110 transition-transform duration-200">🍞</div>
+                <h3 className="font-semibold text-gray-900 mb-1 lg:mb-2 text-sm lg:text-base">Breads & Cereals</h3>
+                <p className="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4 hidden lg:block">Fresh breads, spreads, oats and cereals</p>
+                <div className="text-xs text-gray-500 bg-gray-50 px-2 lg:px-3 py-1 rounded-full">
+                  15+ items
+                </div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => {
+                onCategoryClick?.('beverages');
+                setTimeout(() => {
+                  const productsSection = document.querySelector('[data-section="products"]');
+                  if (productsSection) {
+                    const headerHeight = 80;
+                    const offset = headerHeight + 20;
+                    const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({
+                      top: elementPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 100);
+              }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-3 lg:p-6 cursor-pointer group hover:scale-105"
+            >
+              <div className="text-center">
+                <div className="text-2xl lg:text-4xl mb-2 lg:mb-3 group-hover:scale-110 transition-transform duration-200">🥤</div>
+                <h3 className="font-semibold text-gray-900 mb-1 lg:mb-2 text-sm lg:text-base">Beverages</h3>
+                <p className="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4 hidden lg:block">Drinks, juices, and refreshments</p>
+                <div className="text-xs text-gray-500 bg-gray-50 px-2 lg:px-3 py-1 rounded-full">
+                  25+ items
+                </div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => {
+                onCategoryClick?.('household-essentials');
+                setTimeout(() => {
+                  const productsSection = document.querySelector('[data-section="products"]');
+                  if (productsSection) {
+                    const headerHeight = 80;
+                    const offset = headerHeight + 20;
+                    const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({
+                      top: elementPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 100);
+              }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-3 lg:p-6 cursor-pointer group hover:scale-105"
+            >
+              <div className="text-center">
+                <div className="text-2xl lg:text-4xl mb-2 lg:mb-3 group-hover:scale-110 transition-transform duration-200">🧴</div>
+                <h3 className="font-semibold text-gray-900 mb-1 lg:mb-2 text-sm lg:text-base">Household Essentials</h3>
+                <p className="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4 hidden lg:block">Cleaning supplies and household items</p>
+                <div className="text-xs text-gray-500 bg-gray-50 px-2 lg:px-3 py-1 rounded-full">
+                  40+ items
+                </div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => {
+                onCategoryClick?.('medicines-health-care-products');
+                setTimeout(() => {
+                  const productsSection = document.querySelector('[data-section="products"]');
+                  if (productsSection) {
+                    const headerHeight = 80;
+                    const offset = headerHeight + 20;
+                    const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({
+                      top: elementPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 100);
+              }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-3 lg:p-6 cursor-pointer group hover:scale-105"
+            >
+              <div className="text-center">
+                <div className="text-2xl lg:text-4xl mb-2 lg:mb-3 group-hover:scale-110 transition-transform duration-200">💊</div>
+                <h3 className="font-semibold text-gray-900 mb-1 lg:mb-2 text-sm lg:text-base">Health & Medicine</h3>
+                <p className="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4 hidden lg:block">Medicines and health care products</p>
+                <div className="text-xs text-gray-500 bg-gray-50 px-2 lg:px-3 py-1 rounded-full">
+                  30+ items
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </main>
-    </>
+
+        {/* Products Section */}
+        <div className="mb-6 lg:mb-8" data-section="products">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 lg:mb-6 gap-2">
+            <div className="flex items-center">
+              <span className="text-xl lg:text-2xl mr-2 lg:mr-3">
+                {searchTerm ? '🔍' : selectedCategory === 'all' ? '🛒' : '📦'}
+              </span>
+              <h3 className="text-lg lg:text-2xl font-semibold text-gray-900">
+                {searchTerm 
+                  ? `Search Results for "${searchTerm}"` 
+                  : selectedCategory === 'all' 
+                    ? 'All Products'
+                    : `Products in ${categories.find(cat => cat.id === selectedCategory)?.name || 'Category'}`
+                }
+              </h3>
+            </div>
+            <div className="text-xs lg:text-sm text-gray-500">
+              {menuItems.length} product{menuItems.length !== 1 ? 's' : ''} available
+            </div>
+          </div>
+          
+          {menuItems.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-4">
+              {menuItems.map((item) => {
+                // Find cart items that match this menu item (base item without variations/add-ons)
+                const matchingCartItems = cartItems.filter(cartItem => 
+                  cartItem.id.startsWith(item.id + '-')
+                );
+                // Calculate total quantity for this item across all variations
+                const totalQuantity = matchingCartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
+                
+                return (
+                  <MenuItemCard
+                    key={item.id}
+                    item={item}
+                    onAddToCart={addToCart}
+                    quantity={totalQuantity}
+                    onUpdateQuantity={(id, quantity) => {
+                      // Find the first matching cart item to update
+                      const cartItem = matchingCartItems[0];
+                      if (cartItem) {
+                        updateQuantity(cartItem.id, quantity);
+                      }
+                    }}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 lg:py-12">
+              {searchTerm ? (
+                <>
+                  <div className="text-gray-400 text-4xl lg:text-6xl mb-3 lg:mb-4">🔍</div>
+                  <h4 className="text-lg lg:text-xl font-semibold text-gray-600 mb-2">No Results Found</h4>
+                  <p className="text-sm lg:text-base text-gray-500 px-4">No products found for "{searchTerm}". Try a different search term.</p>
+                </>
+              ) : selectedCategory === 'all' ? (
+                <>
+                  <div className="text-gray-400 text-4xl lg:text-6xl mb-3 lg:mb-4">🛒</div>
+                  <h4 className="text-lg lg:text-xl font-semibold text-gray-600 mb-2">No Products Available</h4>
+                  <p className="text-sm lg:text-base text-gray-500 px-4">Products will appear here once they are added to the database.</p>
+                </>
+              ) : (
+                <>
+                  <div className="text-gray-400 text-4xl lg:text-6xl mb-3 lg:mb-4">📦</div>
+                  <h4 className="text-lg lg:text-xl font-semibold text-gray-600 mb-2">No Products in This Category</h4>
+                  <p className="text-sm lg:text-base text-gray-500 px-4">No products found in this category. Try selecting a different category or view all products.</p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+    </main>
   );
 };
 

@@ -25,23 +25,23 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
 }) => {
   return (
     <div 
-      className={`${bgColor} ${textColor} rounded-lg p-6 ${className} relative overflow-hidden`}
+      className={`${bgColor} ${textColor} rounded-lg p-4 lg:p-6 ${className} relative overflow-hidden`}
     >
       <div className="relative z-10">
-        <h3 className="text-2xl font-bold mb-2">{title}</h3>
-        <p className="text-lg mb-1">{subtitle}</p>
+        <h3 className="text-lg lg:text-2xl font-bold mb-2">{title}</h3>
+        <p className="text-sm lg:text-lg mb-1">{subtitle}</p>
         {code && (
-          <p className="text-sm mb-2">USE CODE: <span className="font-bold">{code}</span></p>
+          <p className="text-xs lg:text-sm mb-2">USE CODE: <span className="font-bold">{code}</span></p>
         )}
         {promoDates && (
-          <p className="text-sm mb-1">Promo Dates: {promoDates}</p>
+          <p className="text-xs lg:text-sm mb-1">Promo Dates: {promoDates}</p>
         )}
         {minPurchase && (
-          <p className="text-sm">Minimum Purchase: {minPurchase}</p>
+          <p className="text-xs lg:text-sm">Minimum Purchase: {minPurchase}</p>
         )}
       </div>
       {image && (
-        <div className="absolute right-0 top-0 bottom-0 flex items-center opacity-20">
+        <div className="absolute right-0 top-0 bottom-0 flex items-center opacity-10 lg:opacity-20">
           {image}
         </div>
       )}

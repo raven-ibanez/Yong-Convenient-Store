@@ -16,10 +16,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   onUpdateQuantity 
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
+  const [showQuantityPopup, setShowQuantityPopup] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
     item.variations?.[0]
   );
   const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
+  const [popupQuantity, setPopupQuantity] = useState(1);
 
   const calculatePrice = () => {
     // Use effective price (discounted or regular) as base
@@ -37,7 +39,20 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     if (item.variations?.length || item.addOns?.length) {
       setShowCustomization(true);
     } else {
-      onAddToCart(item, 1);
+      // Show quantity popup instead of adding directly
+      setPopupQuantity(1);
+      setShowQuantityPopup(true);
+    }
+  };
+
+  const handlePopupAddToCart = () => {
+    onAddToCart(item, popupQuantity);
+    setShowQuantityPopup(false);
+  };
+
+  const handlePopupQuantityChange = (newQuantity: number) => {
+    if (newQuantity >= 1) {
+      setPopupQuantity(newQuantity);
     }
   };
 
@@ -195,29 +210,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 >
                   Unavailable
                 </button>
-              ) : quantity === 0 ? (
+              ) : (
                 <button
                   onClick={handleAddToCart}
                   className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2.5 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105 font-medium text-sm shadow-lg hover:shadow-xl"
                 >
                   {item.variations?.length || item.addOns?.length ? 'Customize' : 'Add to Cart'}
                 </button>
-              ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-1 border border-yellow-200">
-                  <button
-                    onClick={handleDecrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Minus className="h-4 w-4 text-gray-700" />
-                  </button>
-                  <span className="font-bold text-gray-900 min-w-[28px] text-center text-sm">{quantity}</span>
-                  <button
-                    onClick={handleIncrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Plus className="h-4 w-4 text-gray-700" />
-                  </button>
-                </div>
               )}
             </div>
           </div>
@@ -231,6 +230,69 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           )}
         </div>
       </div>
+
+      {/* Quantity Popup Modal */}
+      {showQuantityPopup && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl">
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Add to Cart</h3>
+                <p className="text-gray-600">{item.name}</p>
+                <p className="text-lg font-bold text-red-600 mt-2">
+                  ₱{item.effectivePrice?.toFixed(2) || item.basePrice.toFixed(2)}
+                </p>
+              </div>
+
+              {/* Quantity Selector */}
+              <div className="flex items-center justify-center space-x-4 mb-6">
+                <button
+                  onClick={() => handlePopupQuantityChange(popupQuantity - 1)}
+                  disabled={popupQuantity <= 1}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Minus className="h-5 w-5 text-gray-700" />
+                </button>
+                
+                <div className="bg-gray-50 rounded-xl px-6 py-3 min-w-[80px]">
+                  <span className="text-2xl font-bold text-gray-900">{popupQuantity}</span>
+                </div>
+                
+                <button
+                  onClick={() => handlePopupQuantityChange(popupQuantity + 1)}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200"
+                >
+                  <Plus className="h-5 w-5 text-gray-700" />
+                </button>
+              </div>
+
+              {/* Total Price */}
+              <div className="text-center mb-6">
+                <p className="text-gray-600">Total:</p>
+                <p className="text-2xl font-bold text-red-600">
+                  ₱{((item.effectivePrice || item.basePrice) * popupQuantity).toFixed(2)}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowQuantityPopup(false)}
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl hover:bg-gray-300 transition-colors duration-200 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handlePopupAddToCart}
+                  className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-lg"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Customization Modal */}
       {showCustomization && (

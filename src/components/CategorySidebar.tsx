@@ -5,9 +5,10 @@ import { ChevronRight } from 'lucide-react';
 interface CategorySidebarProps {
   selectedCategory: string;
   onCategoryClick: (categoryId: string) => void;
+  onViewAllCategories: () => void;
 }
 
-const CategorySidebar: React.FC<CategorySidebarProps> = ({ selectedCategory, onCategoryClick }) => {
+const CategorySidebar: React.FC<CategorySidebarProps> = ({ selectedCategory, onCategoryClick, onViewAllCategories }) => {
   const { categories } = useCategories();
 
   return (
@@ -18,7 +19,22 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ selectedCategory, onC
           {categories.map((category) => (
             <li key={category.id}>
               <button
-                onClick={() => onCategoryClick(category.id)}
+                onClick={() => {
+                  onCategoryClick(category.id);
+                  // Scroll to products section
+                  setTimeout(() => {
+                    const productsSection = document.querySelector('[data-section="products"]');
+                    if (productsSection) {
+                      const headerHeight = 80;
+                      const offset = headerHeight + 20;
+                      const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                      window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 100);
+                }}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
                   selectedCategory === category.id
                     ? 'bg-blue-50 text-blue-700 font-semibold'
@@ -38,7 +54,29 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ selectedCategory, onC
         </ul>
         
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <button className="text-blue-600 hover:text-blue-700 text-sm font-semibold">
+          <button 
+            onClick={() => {
+              onViewAllCategories();
+              // Scroll to products section
+              setTimeout(() => {
+                const productsSection = document.querySelector('[data-section="products"]');
+                if (productsSection) {
+                  const headerHeight = 80;
+                  const offset = headerHeight + 20;
+                  const elementPosition = productsSection.getBoundingClientRect().top + window.scrollY - offset;
+                  window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }, 100);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+              selectedCategory === 'all'
+                ? 'bg-blue-50 text-blue-700 font-semibold'
+                : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+            }`}
+          >
             View All Categories
           </button>
         </div>
