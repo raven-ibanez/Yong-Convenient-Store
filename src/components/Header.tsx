@@ -42,9 +42,24 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
             {loading ? (
               <div className="w-24 lg:w-32 h-8 lg:h-10 bg-gray-200 rounded animate-pulse" />
             ) : (
-              <div className="bg-blue-600 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded font-bold text-lg lg:text-xl">
-                {siteSettings?.site_name || "myNCCC.ph"}
-              </div>
+              <>
+                {siteSettings?.site_logo ? (
+                  <div className="flex items-center space-x-2">
+                    <img 
+                      src={siteSettings.site_logo} 
+                      alt={siteSettings?.site_name || "myNCCC.ph"} 
+                      className="h-8 w-8 lg:h-10 lg:w-10 object-contain"
+                    />
+                    <div className="bg-blue-600 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded font-bold text-lg lg:text-xl">
+                      {siteSettings?.site_name || "myNCCC.ph"}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-blue-600 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded font-bold text-lg lg:text-xl">
+                    {siteSettings?.site_name || "myNCCC.ph"}
+                  </div>
+                )}
+              </>
             )}
           </button>
 
