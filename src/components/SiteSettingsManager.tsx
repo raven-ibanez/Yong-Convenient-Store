@@ -11,7 +11,23 @@ const SiteSettingsManager: React.FC = () => {
     site_name: '',
     site_description: '',
     currency: '',
-    currency_code: ''
+    currency_code: '',
+    footer_address: '',
+    footer_phone: '',
+    footer_email: '',
+    footer_business_hours: '',
+    promo_pickup_title: '',
+    promo_pickup_subtitle: '',
+    promo_pickup_code: '',
+    promo_pickup_dates: '',
+    promo_pickup_min_purchase: '',
+    promo_delivery_title: '',
+    promo_delivery_subtitle: '',
+    promo_payday_title: '',
+    promo_payday_subtitle: '',
+    promo_payday_code: '',
+    promo_payday_dates: '',
+    promo_payday_min_purchase: ''
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
@@ -22,7 +38,23 @@ const SiteSettingsManager: React.FC = () => {
         site_name: siteSettings.site_name,
         site_description: siteSettings.site_description,
         currency: siteSettings.currency,
-        currency_code: siteSettings.currency_code
+        currency_code: siteSettings.currency_code,
+        footer_address: siteSettings.footer_address,
+        footer_phone: siteSettings.footer_phone,
+        footer_email: siteSettings.footer_email,
+        footer_business_hours: siteSettings.footer_business_hours,
+        promo_pickup_title: siteSettings.promo_pickup_title,
+        promo_pickup_subtitle: siteSettings.promo_pickup_subtitle,
+        promo_pickup_code: siteSettings.promo_pickup_code,
+        promo_pickup_dates: siteSettings.promo_pickup_dates,
+        promo_pickup_min_purchase: siteSettings.promo_pickup_min_purchase,
+        promo_delivery_title: siteSettings.promo_delivery_title,
+        promo_delivery_subtitle: siteSettings.promo_delivery_subtitle,
+        promo_payday_title: siteSettings.promo_payday_title,
+        promo_payday_subtitle: siteSettings.promo_payday_subtitle,
+        promo_payday_code: siteSettings.promo_payday_code,
+        promo_payday_dates: siteSettings.promo_payday_dates,
+        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -64,7 +96,23 @@ const SiteSettingsManager: React.FC = () => {
         site_description: formData.site_description,
         currency: formData.currency,
         currency_code: formData.currency_code,
-        site_logo: logoUrl
+        site_logo: logoUrl,
+        footer_address: formData.footer_address,
+        footer_phone: formData.footer_phone,
+        footer_email: formData.footer_email,
+        footer_business_hours: formData.footer_business_hours,
+        promo_pickup_title: formData.promo_pickup_title,
+        promo_pickup_subtitle: formData.promo_pickup_subtitle,
+        promo_pickup_code: formData.promo_pickup_code,
+        promo_pickup_dates: formData.promo_pickup_dates,
+        promo_pickup_min_purchase: formData.promo_pickup_min_purchase,
+        promo_delivery_title: formData.promo_delivery_title,
+        promo_delivery_subtitle: formData.promo_delivery_subtitle,
+        promo_payday_title: formData.promo_payday_title,
+        promo_payday_subtitle: formData.promo_payday_subtitle,
+        promo_payday_code: formData.promo_payday_code,
+        promo_payday_dates: formData.promo_payday_dates,
+        promo_payday_min_purchase: formData.promo_payday_min_purchase
       });
 
       setIsEditing(false);
@@ -80,7 +128,23 @@ const SiteSettingsManager: React.FC = () => {
         site_name: siteSettings.site_name,
         site_description: siteSettings.site_description,
         currency: siteSettings.currency,
-        currency_code: siteSettings.currency_code
+        currency_code: siteSettings.currency_code,
+        footer_address: siteSettings.footer_address,
+        footer_phone: siteSettings.footer_phone,
+        footer_email: siteSettings.footer_email,
+        footer_business_hours: siteSettings.footer_business_hours,
+        promo_pickup_title: siteSettings.promo_pickup_title,
+        promo_pickup_subtitle: siteSettings.promo_pickup_subtitle,
+        promo_pickup_code: siteSettings.promo_pickup_code,
+        promo_pickup_dates: siteSettings.promo_pickup_dates,
+        promo_pickup_min_purchase: siteSettings.promo_pickup_min_purchase,
+        promo_delivery_title: siteSettings.promo_delivery_title,
+        promo_delivery_subtitle: siteSettings.promo_delivery_subtitle,
+        promo_payday_title: siteSettings.promo_payday_title,
+        promo_payday_subtitle: siteSettings.promo_payday_subtitle,
+        promo_payday_code: siteSettings.promo_payday_code,
+        promo_payday_dates: siteSettings.promo_payday_dates,
+        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -148,7 +212,7 @@ const SiteSettingsManager: React.FC = () => {
                 <img
                   src={logoPreview}
                   alt="Site Logo"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <div className="text-2xl text-gray-400">☕</div>
@@ -248,6 +312,317 @@ const SiteSettingsManager: React.FC = () => {
             ) : (
               <p className="text-lg font-medium text-black">{siteSettings?.currency_code}</p>
             )}
+          </div>
+        </div>
+
+        {/* Footer Contact Information */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Footer Contact Information</h3>
+          
+          {/* Address */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Address
+            </label>
+            {isEditing ? (
+              <textarea
+                name="footer_address"
+                value={formData.footer_address}
+                onChange={handleInputChange}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Enter full address (use line breaks for formatting)"
+              />
+            ) : (
+              <div className="text-gray-600 whitespace-pre-line">{siteSettings?.footer_address}</div>
+            )}
+          </div>
+
+          {/* Phone and Email */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number
+              </label>
+              {isEditing ? (
+                <input
+                  type="tel"
+                  name="footer_phone"
+                  value={formData.footer_phone}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="e.g., +63 912 345 6789"
+                />
+              ) : (
+                <p className="text-gray-600">{siteSettings?.footer_phone}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              {isEditing ? (
+                <input
+                  type="email"
+                  name="footer_email"
+                  value={formData.footer_email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="e.g., info@yongconvenience.com"
+                />
+              ) : (
+                <p className="text-gray-600">{siteSettings?.footer_email}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Business Hours */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Business Hours
+            </label>
+            {isEditing ? (
+              <textarea
+                name="footer_business_hours"
+                value={formData.footer_business_hours}
+                onChange={handleInputChange}
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Enter business hours (use line breaks for formatting)"
+              />
+            ) : (
+              <div className="text-gray-600 whitespace-pre-line">{siteSettings?.footer_business_hours}</div>
+            )}
+          </div>
+        </div>
+
+        {/* Promotional Banners */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Promotional Banners</h3>
+          
+          {/* Pickup Promo Banner */}
+          <div className="mb-6">
+            <h4 className="text-md font-medium text-gray-800 mb-3">Pickup Promotional Banner</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_pickup_title"
+                    value={formData.promo_pickup_title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., PICK-UP HIGHLIGHT"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_pickup_title}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Subtitle
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_pickup_subtitle"
+                    value={formData.promo_pickup_subtitle}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., GET P200 OFF WHEN YOU PICK UP YOUR ORDER!"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_pickup_subtitle}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Code
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_pickup_code"
+                    value={formData.promo_pickup_code}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., PICKUPSEPTEMBER"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_pickup_code}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Dates
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_pickup_dates"
+                    value={formData.promo_pickup_dates}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., September 15 & 30"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_pickup_dates}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Minimum Purchase
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_pickup_min_purchase"
+                    value={formData.promo_pickup_min_purchase}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., P1,500"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_pickup_min_purchase}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Delivery Schedule Banner */}
+          <div className="mb-6">
+            <h4 className="text-md font-medium text-gray-800 mb-3">Delivery Schedule Banner</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_delivery_title"
+                    value={formData.promo_delivery_title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., Delivery Schedule"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_delivery_title}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Subtitle
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_delivery_subtitle"
+                    value={formData.promo_delivery_subtitle}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., Orders received before 11am Same Day Delivery"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_delivery_subtitle}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Payday Specials Banner */}
+          <div className="mb-6">
+            <h4 className="text-md font-medium text-gray-800 mb-3">Payday Specials Banner</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_payday_title"
+                    value={formData.promo_payday_title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., PAYDAY SPECIALS"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_payday_title}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Subtitle
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_payday_subtitle"
+                    value={formData.promo_payday_subtitle}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., FREE DELIVERY"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_payday_subtitle}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Code
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_payday_code"
+                    value={formData.promo_payday_code}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., SAHODNASEP"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_payday_code}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Details
+                </label>
+                {isEditing ? (
+                  <textarea
+                    name="promo_payday_dates"
+                    value={formData.promo_payday_dates}
+                    onChange={handleInputChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., on September 15 and 30, 2025 with a min. spend of P3,000"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_payday_dates}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Minimum Purchase
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="promo_payday_min_purchase"
+                    value={formData.promo_payday_min_purchase}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="e.g., P3,000"
+                  />
+                ) : (
+                  <p className="text-gray-600">{siteSettings?.promo_payday_min_purchase}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

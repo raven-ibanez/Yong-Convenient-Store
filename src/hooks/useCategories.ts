@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { categories as fallbackCategories } from '../data/menuData';
 
 export interface Category {
   id: string;
@@ -28,11 +29,33 @@ export const useCategories = () => {
 
       if (fetchError) throw fetchError;
 
-      setCategories(data || []);
+      // If no categories found, use fallback data
+      if (!data || data.length === 0) {
+        console.log('No categories found in database, using fallback data');
+        setCategories(fallbackCategories.map(cat => ({
+          ...cat,
+          sort_order: 0,
+          active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })));
+      } else {
+        setCategories(data);
+      }
       setError(null);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch categories');
+      
+      // Fallback to sample data if database fetch fails
+      console.log('Using fallback categories data');
+      setCategories(fallbackCategories.map(cat => ({
+        ...cat,
+        sort_order: 0,
+        active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })));
     } finally {
       setLoading(false);
     }

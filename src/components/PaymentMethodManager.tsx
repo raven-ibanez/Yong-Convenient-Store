@@ -298,7 +298,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
                         <img
                           src={method.qr_code_url}
                           alt={`${method.name} QR Code`}
-                          className="w-16 h-16 rounded-lg border border-gray-300 object-cover"
+                          className="w-16 h-16 rounded-lg border border-gray-300 object-contain bg-gray-50"
                           onError={(e) => {
                             e.currentTarget.src = 'https://images.pexels.com/photos/8867482/pexels-photo-8867482.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop';
                           }}

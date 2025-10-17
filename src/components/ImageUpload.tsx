@@ -59,7 +59,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <img
             src={currentImage}
             alt="Menu item preview"
-            className="w-full h-48 object-cover rounded-lg border border-gray-300 transition-opacity duration-300"
+            className="w-full h-48 object-contain rounded-lg border border-gray-300 transition-opacity duration-300 bg-gray-50"
             loading="lazy"
             decoding="async"
             onError={(e) => {

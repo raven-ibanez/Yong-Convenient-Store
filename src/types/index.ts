@@ -71,4 +71,22 @@ export interface SiteSettings {
   site_description: string;
   currency: string;
   currency_code: string;
+  // Footer contact information
+  footer_address: string;
+  footer_phone: string;
+  footer_email: string;
+  footer_business_hours: string;
+  // Promotional banners
+  promo_pickup_title: string;
+  promo_pickup_subtitle: string;
+  promo_pickup_code: string;
+  promo_pickup_dates: string;
+  promo_pickup_min_purchase: string;
+  promo_delivery_title: string;
+  promo_delivery_subtitle: string;
+  promo_payday_title: string;
+  promo_payday_subtitle: string;
+  promo_payday_code: string;
+  promo_payday_dates: string;
+  promo_payday_min_purchase: string;
 }

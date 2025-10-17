@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for public read access
+DROP POLICY IF EXISTS "Anyone can read site settings" ON site_settings;
 CREATE POLICY "Anyone can read site settings"
   ON site_settings
   FOR SELECT
@@ -77,6 +78,7 @@ CREATE POLICY "Anyone can read site settings"
   USING (true);
 
 -- Create policies for authenticated admin access
+DROP POLICY IF EXISTS "Authenticated users can manage site settings" ON site_settings;
 CREATE POLICY "Authenticated users can manage site settings"
   ON site_settings
   FOR ALL
@@ -85,6 +87,7 @@ CREATE POLICY "Authenticated users can manage site settings"
   WITH CHECK (true);
 
 -- Create updated_at trigger for site_settings
+DROP TRIGGER IF EXISTS update_site_settings_updated_at ON site_settings;
 CREATE TRIGGER update_site_settings_updated_at
   BEFORE UPDATE ON site_settings
   FOR EACH ROW
@@ -96,7 +99,23 @@ INSERT INTO site_settings (id, value, type, description) VALUES
   ('site_logo', 'https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop', 'image', 'The logo image URL for the site'),
   ('site_description', 'Your one-stop convenience store for all your daily needs', 'text', 'Short description of the convenience store'),
   ('currency', 'PHP', 'text', 'Currency symbol for prices'),
-  ('currency_code', 'PHP', 'text', 'Currency code for payments')
+  ('currency_code', 'PHP', 'text', 'Currency code for payments'),
+  ('footer_address', '123 Main Street\nCity, Province 1234\nPhilippines', 'text', 'Physical address displayed in footer'),
+  ('footer_phone', '+63 912 345 6789', 'text', 'Contact phone number displayed in footer'),
+  ('footer_email', 'info@yongconvenience.com', 'text', 'Contact email address displayed in footer'),
+  ('footer_business_hours', 'Mon - Sun: 6:00 AM - 10:00 PM\nOpen 7 days a week', 'text', 'Business hours displayed in footer'),
+  ('promo_pickup_title', 'PICK-UP HIGHLIGHT', 'text', 'Title for pickup promotional banner'),
+  ('promo_pickup_subtitle', 'GET P200 OFF WHEN YOU PICK UP YOUR ORDER!', 'text', 'Subtitle for pickup promotional banner'),
+  ('promo_pickup_code', 'PICKUPSEPTEMBER', 'text', 'Promo code for pickup banner'),
+  ('promo_pickup_dates', 'September 15 & 30', 'text', 'Promo dates for pickup banner'),
+  ('promo_pickup_min_purchase', 'P1,500', 'text', 'Minimum purchase for pickup promo'),
+  ('promo_delivery_title', 'Delivery Schedule', 'text', 'Title for delivery schedule banner'),
+  ('promo_delivery_subtitle', 'Orders received before 11am Same Day Delivery', 'text', 'Subtitle for delivery schedule banner'),
+  ('promo_payday_title', 'PAYDAY SPECIALS', 'text', 'Title for payday specials banner'),
+  ('promo_payday_subtitle', 'FREE DELIVERY', 'text', 'Subtitle for payday specials banner'),
+  ('promo_payday_code', 'SAHODNASEP', 'text', 'Promo code for payday banner'),
+  ('promo_payday_dates', 'on September 15 and 30, 2025 with a min. spend of P3,000', 'text', 'Promo details for payday banner'),
+  ('promo_payday_min_purchase', 'P3,000', 'text', 'Minimum purchase for payday promo')
 ON CONFLICT (id) DO NOTHING;
 
 -- Create function to check if discount is active

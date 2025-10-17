@@ -66,7 +66,13 @@ export const useMenu = () => {
         };
       }) || [];
 
-      setMenuItems(formattedItems);
+      // If no menu items found, use fallback data
+      if (formattedItems.length === 0) {
+        console.log('No menu items found in database, using fallback data');
+        setMenuItems(menuData);
+      } else {
+        setMenuItems(formattedItems);
+      }
       setError(null);
     } catch (err) {
       console.error('Error fetching menu items:', err);

@@ -25,7 +25,23 @@ export const useSiteSettings = () => {
         site_logo: data.find(s => s.id === 'site_logo')?.value || '',
         site_description: data.find(s => s.id === 'site_description')?.value || '',
         currency: data.find(s => s.id === 'currency')?.value || 'PHP',
-        currency_code: data.find(s => s.id === 'currency_code')?.value || 'PHP'
+        currency_code: data.find(s => s.id === 'currency_code')?.value || 'PHP',
+        footer_address: data.find(s => s.id === 'footer_address')?.value || '123 Main Street\nCity, Province 1234\nPhilippines',
+        footer_phone: data.find(s => s.id === 'footer_phone')?.value || '+63 912 345 6789',
+        footer_email: data.find(s => s.id === 'footer_email')?.value || 'info@yongconvenience.com',
+        footer_business_hours: data.find(s => s.id === 'footer_business_hours')?.value || 'Mon - Sun: 6:00 AM - 10:00 PM\nOpen 7 days a week',
+        promo_pickup_title: data.find(s => s.id === 'promo_pickup_title')?.value || 'PICK-UP HIGHLIGHT',
+        promo_pickup_subtitle: data.find(s => s.id === 'promo_pickup_subtitle')?.value || 'GET P200 OFF WHEN YOU PICK UP YOUR ORDER!',
+        promo_pickup_code: data.find(s => s.id === 'promo_pickup_code')?.value || 'PICKUPSEPTEMBER',
+        promo_pickup_dates: data.find(s => s.id === 'promo_pickup_dates')?.value || 'September 15 & 30',
+        promo_pickup_min_purchase: data.find(s => s.id === 'promo_pickup_min_purchase')?.value || 'P1,500',
+        promo_delivery_title: data.find(s => s.id === 'promo_delivery_title')?.value || 'Delivery Schedule',
+        promo_delivery_subtitle: data.find(s => s.id === 'promo_delivery_subtitle')?.value || 'Orders received before 11am Same Day Delivery',
+        promo_payday_title: data.find(s => s.id === 'promo_payday_title')?.value || 'PAYDAY SPECIALS',
+        promo_payday_subtitle: data.find(s => s.id === 'promo_payday_subtitle')?.value || 'FREE DELIVERY',
+        promo_payday_code: data.find(s => s.id === 'promo_payday_code')?.value || 'SAHODNASEP',
+        promo_payday_dates: data.find(s => s.id === 'promo_payday_dates')?.value || 'on September 15 and 30, 2025 with a min. spend of P3,000',
+        promo_payday_min_purchase: data.find(s => s.id === 'promo_payday_min_purchase')?.value || 'P3,000'
       };
 
       setSiteSettings(settings);

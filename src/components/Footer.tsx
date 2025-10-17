@@ -42,34 +42,37 @@ const Footer: React.FC = () => {
               <div className="flex items-start space-x-2 sm:space-x-3 sm:flex-row-reverse sm:space-x-reverse">
                 <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                 <div className="sm:text-right">
-                  <p className="text-gray-300 text-xs sm:text-sm">
-                    123 Main Street<br />
-                    City, Province 1234<br />
-                    Philippines
+                  <p className="text-gray-300 text-xs sm:text-sm whitespace-pre-line">
+                    {siteSettings?.footer_address || '123 Main Street\nCity, Province 1234\nPhilippines'}
                   </p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-2 sm:space-x-3 sm:flex-row-reverse sm:space-x-reverse">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400 flex-shrink-0" />
-                <a href="tel:+639123456789" className="text-gray-300 hover:text-white transition-colors text-xs sm:text-sm">
-                  +63 912 345 6789
+                <a 
+                  href={`tel:${siteSettings?.footer_phone?.replace(/\s/g, '') || '+639123456789'}`} 
+                  className="text-gray-300 hover:text-white transition-colors text-xs sm:text-sm"
+                >
+                  {siteSettings?.footer_phone || '+63 912 345 6789'}
                 </a>
               </div>
               
               <div className="flex items-center space-x-2 sm:space-x-3 sm:flex-row-reverse sm:space-x-reverse">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400 flex-shrink-0" />
-                <a href="mailto:info@yongconvenience.com" className="text-gray-300 hover:text-white transition-colors text-xs sm:text-sm break-all sm:break-normal">
-                  info@yongconvenience.com
+                <a 
+                  href={`mailto:${siteSettings?.footer_email || 'info@yongconvenience.com'}`} 
+                  className="text-gray-300 hover:text-white transition-colors text-xs sm:text-sm break-all sm:break-normal"
+                >
+                  {siteSettings?.footer_email || 'info@yongconvenience.com'}
                 </a>
               </div>
               
               <div className="flex items-start space-x-2 sm:space-x-3 sm:flex-row-reverse sm:space-x-reverse">
                 <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400 mt-0.5 flex-shrink-0" />
                 <div className="sm:text-right">
-                  <p className="text-gray-300 text-xs sm:text-sm">
-                    Mon - Sun: 6:00 AM - 10:00 PM<br />
-                    <span className="text-xs text-gray-400">Open 7 days a week</span>
+                  <p className="text-gray-300 text-xs sm:text-sm whitespace-pre-line">
+                    {siteSettings?.footer_business_hours || 'Mon - Sun: 6:00 AM - 10:00 PM\nOpen 7 days a week'}
                   </p>
                 </div>
               </div>
@@ -81,7 +84,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 mt-3 pt-3 sm:mt-4 sm:pt-4">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-1 sm:space-y-0">
             <div className="text-gray-400 text-xs sm:text-sm text-center sm:text-left">
-              © 2024 {siteSettings?.site_name || "Yong Convenience Store"}. All rights reserved.
+              © {new Date().getFullYear()} {siteSettings?.site_name || "Yong Convenience Store"}. All rights reserved.
             </div>
           </div>
         </div>
