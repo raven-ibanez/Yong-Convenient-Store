@@ -175,6 +175,10 @@ function MainApp() {
               cartItems={cart.cartItems}
               totalPrice={cart.getTotalPrice()}
               onBack={() => handleViewChange('cart')}
+              onOrderPlaced={() => {
+                cart.clearCart();
+                handleViewChange('menu');
+              }}
             />
           )}
         </main>

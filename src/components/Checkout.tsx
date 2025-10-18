@@ -7,9 +7,10 @@ interface CheckoutProps {
   cartItems: CartItem[];
   totalPrice: number;
   onBack: () => void;
+  onOrderPlaced?: () => void;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) => {
+const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack, onOrderPlaced }) => {
   const { paymentMethods } = usePaymentMethods();
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [customerName, setCustomerName] = useState('');
@@ -22,6 +23,8 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('gcash');
   const [referenceNumber, setReferenceNumber] = useState('');
   const [notes, setNotes] = useState('');
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   React.useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -40,21 +43,28 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
     setStep('payment');
   };
 
-  const handlePlaceOrder = () => {
-    const timeInfo = serviceType === 'pickup' 
-      ? (pickupTime === 'custom' ? customTime : `${pickupTime} minutes`)
-      : '';
+  const handlePlaceOrder = async () => {
+    if (isPlacingOrder) return; // Prevent multiple clicks
     
+    setIsPlacingOrder(true);
     
-    const orderDetails = `
+    try {
+      const timeInfo = serviceType === 'pickup' 
+        ? (pickupTime === 'custom' ? customTime : `${pickupTime} minutes`)
+        : '';
+      
+      // Generate unique order ID to prevent duplicate orders
+      const orderId = `ORDER-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      const orderDetails = `
 🛒 Yong Convenience Store ORDER
+📋 Order ID: ${orderId}
 
 👤 Customer: ${customerName}
 📞 Contact: ${contactNumber}
 📍 Service: ${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}
 ${serviceType === 'delivery' ? `🏠 Address: ${address}${landmark ? `\n🗺️ Landmark: ${landmark}` : ''}` : ''}
 ${serviceType === 'pickup' ? `⏰ Pickup Time: ${timeInfo}` : ''}
-
 
 📋 ORDER DETAILS:
 ${cartItems.map(item => {
@@ -69,12 +79,12 @@ ${cartItems.map(item => {
         : addOn.name
     ).join(', ')}`;
   }
-  itemDetails += ` x${item.quantity} - ₱${item.totalPrice * item.quantity}`;
+  itemDetails += ` x${item.quantity} - ₱${(item.totalPrice * item.quantity).toFixed(2)}`;
   return itemDetails;
 }).join('\n')}
 
-💰 TOTAL: ₱${totalPrice}
-${serviceType === 'delivery' ? `🛵 DELIVERY FEE:` : ''}
+💰 TOTAL: ₱${totalPrice.toFixed(2)}
+${serviceType === 'delivery' ? `🛵 DELIVERY FEE: ₱50.00` : ''}
 
 💳 Payment: ${selectedPaymentMethod?.name || paymentMethod}
 📸 Payment Screenshot: Please attach your payment receipt screenshot
@@ -82,22 +92,92 @@ ${serviceType === 'delivery' ? `🛵 DELIVERY FEE:` : ''}
 ${notes ? `📝 Notes: ${notes}` : ''}
 
 Please confirm this order to proceed. Thank you for choosing Yong Convenience Store! 🥟
-    `.trim();
+      `.trim();
 
-    const encodedMessage = encodeURIComponent(orderDetails);
-    const messengerUrl = `https://m.me/711554648708892?text=${encodedMessage}`;
-    
-    window.open(messengerUrl, '_blank');
-    
+      // Store order details in localStorage for tracking
+      const orderData = {
+        orderId,
+        customerName,
+        contactNumber,
+        serviceType,
+        address: serviceType === 'delivery' ? address : '',
+        landmark: serviceType === 'delivery' ? landmark : '',
+        pickupTime: serviceType === 'pickup' ? timeInfo : '',
+        paymentMethod: selectedPaymentMethod?.name || paymentMethod,
+        notes,
+        items: cartItems,
+        totalPrice,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Store in localStorage to prevent duplicate orders
+      const existingOrders = JSON.parse(localStorage.getItem('placedOrders') || '[]');
+      existingOrders.push(orderData);
+      localStorage.setItem('placedOrders', JSON.stringify(existingOrders));
+      
+      // Show success notification
+      setShowSuccessNotification(true);
+      
+      // Call the callback to clear cart and refresh
+      if (onOrderPlaced) {
+        onOrderPlaced();
+      }
+      
+      // Wait a moment for the notification to show
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Encode and open Messenger
+      const encodedMessage = encodeURIComponent(orderDetails);
+      const messengerUrl = `https://m.me/711554648708892?text=${encodedMessage}`;
+      
+      // Open in new tab with proper handling
+      const newWindow = window.open(messengerUrl, '_blank', 'noopener,noreferrer');
+      
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        // Fallback if popup is blocked
+        window.location.href = messengerUrl;
+      }
+      
+      // Refresh the page after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error placing order:', error);
+      alert('There was an error placing your order. Please try again.');
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   const isDetailsValid = customerName && contactNumber && 
     (serviceType !== 'delivery' || address) && 
     (serviceType !== 'pickup' || (pickupTime !== 'custom' || customTime));
 
+  // Success notification component
+  const SuccessNotification = () => {
+    if (!showSuccessNotification) return null;
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
+          <div className="text-6xl mb-4">✅</div>
+          <h3 className="text-2xl font-bold text-green-600 mb-2">Order Placed Successfully!</h3>
+          <p className="text-gray-600 mb-6">
+            Your order has been sent to Messenger. You will be redirected shortly.
+          </p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+        </div>
+      </div>
+    );
+  };
+
   if (step === 'details') {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <>
+        <SuccessNotification />
+        <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center mb-8">
           <button
             onClick={onBack}
@@ -295,12 +375,15 @@ Please confirm this order to proceed. Thank you for choosing Yong Convenience St
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   // Payment Step
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <>
+      <SuccessNotification />
+      <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center mb-8">
         <button
           onClick={() => setStep('details')}
@@ -425,9 +508,21 @@ Please confirm this order to proceed. Thank you for choosing Yong Convenience St
 
           <button
             onClick={handlePlaceOrder}
-            className="w-full py-4 rounded-xl font-medium text-lg transition-all duration-200 transform bg-red-600 text-white hover:bg-red-700 hover:scale-[1.02]"
+            disabled={isPlacingOrder}
+            className={`w-full py-4 rounded-xl font-medium text-lg transition-all duration-200 transform ${
+              isPlacingOrder 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-red-600 text-white hover:bg-red-700 hover:scale-[1.02]'
+            }`}
           >
-            Place Order via Messenger
+            {isPlacingOrder ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Placing Order...
+              </div>
+            ) : (
+              'Place Order via Messenger'
+            )}
           </button>
           
           <p className="text-xs text-gray-500 text-center mt-3">
@@ -436,6 +531,7 @@ Please confirm this order to proceed. Thank you for choosing Yong Convenience St
         </div>
       </div>
     </div>
+    </>
   );
 };
 

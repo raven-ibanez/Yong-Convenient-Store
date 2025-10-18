@@ -332,7 +332,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           </div>
           
           {menuItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
               {menuItems.map((item) => {
                 // Find cart items that match this menu item (base item without variations/add-ons)
                 const matchingCartItems = cartItems.filter(cartItem => 
