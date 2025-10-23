@@ -275,6 +275,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 </p>
               </div>
 
+              {/* Wholesale Note */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
+                <p className="text-sm text-blue-800 text-center">
+                  <span className="font-medium">Note:</span> For the Wholesale Price and Bulk Order Price, Please contact the General Manager.
+                </p>
+              </div>
+
               {/* Action Buttons */}
               <div className="flex space-x-3">
                 <button
