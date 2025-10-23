@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { CartItem, PaymentMethod, ServiceType } from '../types';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
+import { formatPrice } from '../utils/priceFormatter';
 
 interface CheckoutProps {
   cartItems: CartItem[];
@@ -79,12 +80,12 @@ ${cartItems.map(item => {
         : addOn.name
     ).join(', ')}`;
   }
-  itemDetails += ` x${item.quantity} - ₱${(item.totalPrice * item.quantity).toFixed(2)}`;
+  itemDetails += ` x${item.quantity} - ${formatPrice(item.totalPrice * item.quantity)}`;
   return itemDetails;
 }).join('\n')}
 
-💰 TOTAL: ₱${totalPrice.toFixed(2)}
-${serviceType === 'delivery' ? `🛵 DELIVERY FEE: ₱50.00` : ''}
+💰 TOTAL: ${formatPrice(totalPrice)}
+${serviceType === 'delivery' ? `🛵 DELIVERY FEE: ${formatPrice(50)}` : ''}
 
 💳 Payment: ${selectedPaymentMethod?.name || paymentMethod}
 📸 Payment Screenshot: Please attach your payment receipt screenshot

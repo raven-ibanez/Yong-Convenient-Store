@@ -9,6 +9,7 @@ import CategoryManager from './CategoryManager';
 import PaymentMethodManager from './PaymentMethodManager';
 import SiteSettingsManager from './SiteSettingsManager';
 import DatabaseManager from './DatabaseManager';
+import { formatPrice } from '../utils/priceFormatter';
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -741,11 +742,11 @@ const AdminDashboard: React.FC = () => {
                         <div className="flex flex-col">
                           {item.isOnDiscount && item.discountPrice ? (
                             <>
-                              <span className="text-red-600 font-semibold">₱{item.discountPrice}</span>
-                              <span className="text-gray-500 line-through text-xs">₱{item.basePrice}</span>
+                              <span className="text-red-600 font-semibold">{formatPrice(item.discountPrice)}</span>
+                              <span className="text-gray-500 line-through text-xs">{formatPrice(item.basePrice)}</span>
                             </>
                           ) : (
-                            <span>₱{item.basePrice}</span>
+                            <span>{formatPrice(item.basePrice)}</span>
                           )}
                         </div>
                       </td>
@@ -845,12 +846,12 @@ const AdminDashboard: React.FC = () => {
                       <span className="text-gray-500">Price:</span>
                       <span className="ml-1 font-medium text-gray-900">
                         {item.isOnDiscount && item.discountPrice ? (
-                          <span className="text-red-600">₱{item.discountPrice}</span>
+                          <span className="text-red-600">{formatPrice(item.discountPrice)}</span>
                         ) : (
-                          `₱${item.basePrice}`
+                          formatPrice(item.basePrice)
                         )}
                         {item.isOnDiscount && item.discountPrice && (
-                          <span className="text-gray-500 line-through text-xs ml-1">₱{item.basePrice}</span>
+                          <span className="text-gray-500 line-through text-xs ml-1">{formatPrice(item.basePrice)}</span>
                         )}
                       </span>
                     </div>

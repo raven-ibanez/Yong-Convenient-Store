@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
                   <img 
                     src={siteSettings.site_logo} 
                     alt={siteSettings?.site_name || "Yong Convenience Store"} 
-                    className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 object-contain"
+                    className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 object-contain"
                   />
                   <div className="bg-blue-600 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded font-bold text-sm sm:text-base md:text-lg">
                     {siteSettings?.site_name || "Yong Convenience Store"}

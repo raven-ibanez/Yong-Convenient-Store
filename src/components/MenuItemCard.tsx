@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, X, ShoppingCart } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
+import { formatPrice, formatNumber } from '../utils/priceFormatter';
 
 interface MenuItemCardProps {
   item: MenuItem;
@@ -178,19 +179,19 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl font-bold text-red-600">
-                      ₱{item.discountPrice.toFixed(2)}
+                      {formatPrice(item.discountPrice)}
                     </span>
                     <span className="text-sm text-gray-500 line-through">
-                      ₱{item.basePrice.toFixed(2)}
+                      {formatPrice(item.basePrice)}
                     </span>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Save ₱{(item.basePrice - item.discountPrice).toFixed(2)}
+                    Save {formatPrice(item.basePrice - item.discountPrice)}
                   </div>
                 </div>
               ) : (
                 <div className="text-2xl font-bold text-gray-900">
-                  ₱{item.basePrice.toFixed(2)}
+                  {formatPrice(item.basePrice)}
                 </div>
               )}
               
@@ -240,7 +241,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Add to Cart</h3>
                 <p className="text-gray-600">{item.name}</p>
                 <p className="text-lg font-bold text-red-600 mt-2">
-                  ₱{item.effectivePrice?.toFixed(2) || item.basePrice.toFixed(2)}
+                  {formatPrice(item.effectivePrice || item.basePrice)}
                 </p>
               </div>
 
@@ -270,7 +271,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               <div className="text-center mb-6">
                 <p className="text-gray-600">Total:</p>
                 <p className="text-2xl font-bold text-red-600">
-                  ₱{((item.effectivePrice || item.basePrice) * popupQuantity).toFixed(2)}
+                  {formatPrice((item.effectivePrice || item.basePrice) * popupQuantity)}
                 </p>
               </div>
 
@@ -337,7 +338,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                           <span className="font-medium text-gray-900">{variation.name}</span>
                         </div>
                         <span className="text-gray-900 font-semibold">
-                          ₱{((item.effectivePrice || item.basePrice) + variation.price).toFixed(2)}
+                          {formatPrice((item.effectivePrice || item.basePrice) + variation.price)}
                         </span>
                       </label>
                     ))}
@@ -363,7 +364,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                             <div className="flex-1">
                               <span className="font-medium text-gray-900">{addOn.name}</span>
                               <div className="text-sm text-gray-600">
-                                {addOn.price > 0 ? `₱${addOn.price.toFixed(2)} each` : 'Free'}
+                                {addOn.price > 0 ? `${formatPrice(addOn.price)} each` : 'Free'}
                               </div>
                             </div>
                             
@@ -417,7 +418,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               <div className="border-t border-gray-200 pt-4 mb-6">
                 <div className="flex items-center justify-between text-2xl font-bold text-gray-900">
                   <span>Total:</span>
-                  <span className="text-red-600">₱{calculatePrice().toFixed(2)}</span>
+                  <span className="text-red-600">{formatPrice(calculatePrice())}</span>
                 </div>
               </div>
 
@@ -426,7 +427,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <ShoppingCart className="h-5 w-5" />
-                <span>Add to Cart - ₱{calculatePrice().toFixed(2)}</span>
+                <span>Add to Cart - {formatPrice(calculatePrice())}</span>
               </button>
             </div>
           </div>

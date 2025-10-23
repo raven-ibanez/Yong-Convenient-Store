@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
             className="flex items-center space-x-2"
           >
             {loading ? (
-              <div className="w-24 lg:w-32 h-8 lg:h-10 bg-gray-200 rounded animate-pulse" />
+              <div className="w-32 lg:w-40 h-12 lg:h-16 bg-gray-200 rounded animate-pulse" />
             ) : (
               <>
                 {siteSettings?.site_logo ? (
@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                     <img 
                       src={siteSettings.site_logo} 
                       alt={siteSettings?.site_name || "myNCCC.ph"} 
-                      className="h-8 w-8 lg:h-10 lg:w-10 object-contain"
+                      className="h-12 w-12 lg:h-16 lg:w-16 object-contain"
                     />
                     <div className="bg-blue-600 text-white px-3 lg:px-4 py-1.5 lg:py-2 rounded font-bold text-lg lg:text-xl">
                       {siteSettings?.site_name || "myNCCC.ph"}

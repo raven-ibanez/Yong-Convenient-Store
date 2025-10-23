@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, Plus, Minus, ArrowLeft } from 'lucide-react';
 import { CartItem } from '../types';
+import { formatPrice } from '../utils/priceFormatter';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -116,7 +117,7 @@ const Cart: React.FC<CartProps> = ({
       <div className="bg-white rounded-xl shadow-sm p-6">
         <div className="flex items-center justify-between text-2xl font-noto font-semibold text-black mb-6">
           <span>Total:</span>
-          <span>₱{parseFloat(getTotalPrice() || 0).toFixed(2)}</span>
+          <span>{formatPrice(getTotalPrice() || 0)}</span>
         </div>
         
         <button
