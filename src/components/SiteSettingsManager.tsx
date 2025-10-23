@@ -4,7 +4,7 @@ import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useImageUpload } from '../hooks/useImageUpload';
 
 const SiteSettingsManager: React.FC = () => {
-  const { siteSettings, loading, updateSiteSettings } = useSiteSettings();
+  const { siteSettings, loading, updateSiteSettings, insertBannerSettings } = useSiteSettings();
   const { uploadImage, uploading } = useImageUpload();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,7 +27,11 @@ const SiteSettingsManager: React.FC = () => {
     promo_payday_subtitle: '',
     promo_payday_code: '',
     promo_payday_dates: '',
-    promo_payday_min_purchase: ''
+    promo_payday_min_purchase: '',
+    // Banner visibility toggles
+    banner_pickup_enabled: true,
+    banner_delivery_enabled: true,
+    banner_payday_enabled: true
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
@@ -54,17 +58,21 @@ const SiteSettingsManager: React.FC = () => {
         promo_payday_subtitle: siteSettings.promo_payday_subtitle,
         promo_payday_code: siteSettings.promo_payday_code,
         promo_payday_dates: siteSettings.promo_payday_dates,
-        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase
+        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase,
+        // Banner visibility toggles
+        banner_pickup_enabled: siteSettings.banner_pickup_enabled,
+        banner_delivery_enabled: siteSettings.banner_delivery_enabled,
+        banner_payday_enabled: siteSettings.banner_payday_enabled
       });
       setLogoPreview(siteSettings.site_logo);
     }
   }, [siteSettings]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     }));
   };
 
@@ -90,6 +98,9 @@ const SiteSettingsManager: React.FC = () => {
         logoUrl = uploadedUrl;
       }
 
+      // First, ensure banner settings exist in database
+      await insertBannerSettings();
+
       // Update all settings
       await updateSiteSettings({
         site_name: formData.site_name,
@@ -112,13 +123,24 @@ const SiteSettingsManager: React.FC = () => {
         promo_payday_subtitle: formData.promo_payday_subtitle,
         promo_payday_code: formData.promo_payday_code,
         promo_payday_dates: formData.promo_payday_dates,
-        promo_payday_min_purchase: formData.promo_payday_min_purchase
+        promo_payday_min_purchase: formData.promo_payday_min_purchase,
+        // Banner visibility toggles
+        banner_pickup_enabled: formData.banner_pickup_enabled,
+        banner_delivery_enabled: formData.banner_delivery_enabled,
+        banner_payday_enabled: formData.banner_payday_enabled
       });
 
       setIsEditing(false);
       setLogoFile(null);
+      
+      // Show success message and refresh
+      alert('Settings saved successfully!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('Error saving site settings:', error);
+      alert('Error saving settings: ' + error);
     }
   };
 
@@ -399,6 +421,50 @@ const SiteSettingsManager: React.FC = () => {
         {/* Promotional Banners */}
         <div className="border-t pt-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Promotional Banners</h3>
+          
+          {/* Banner Visibility Toggles */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h4 className="text-md font-medium text-gray-800 mb-4">Banner Visibility</h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="banner_pickup_enabled"
+                  checked={formData.banner_pickup_enabled}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                />
+                <label className="text-sm font-medium text-gray-700">
+                  Show Pickup Banner
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="banner_delivery_enabled"
+                  checked={formData.banner_delivery_enabled}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                />
+                <label className="text-sm font-medium text-gray-700">
+                  Show Delivery Banner
+                </label>
+              </div>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="banner_payday_enabled"
+                  checked={formData.banner_payday_enabled}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                />
+                <label className="text-sm font-medium text-gray-700">
+                  Show Payday Banner
+                </label>
+              </div>
+            </div>
+          </div>
           
           {/* Pickup Promo Banner */}
           <div className="mb-6">

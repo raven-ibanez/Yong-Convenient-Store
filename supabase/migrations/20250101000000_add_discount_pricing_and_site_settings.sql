@@ -115,7 +115,11 @@ INSERT INTO site_settings (id, value, type, description) VALUES
   ('promo_payday_subtitle', 'FREE DELIVERY', 'text', 'Subtitle for payday specials banner'),
   ('promo_payday_code', 'SAHODNASEP', 'text', 'Promo code for payday banner'),
   ('promo_payday_dates', 'on September 15 and 30, 2025 with a min. spend of P3,000', 'text', 'Promo details for payday banner'),
-  ('promo_payday_min_purchase', 'P3,000', 'text', 'Minimum purchase for payday promo')
+  ('promo_payday_min_purchase', 'P3,000', 'text', 'Minimum purchase for payday promo'),
+  -- Banner visibility toggles
+  ('banner_pickup_enabled', 'true', 'boolean', 'Enable/disable pickup promotional banner'),
+  ('banner_delivery_enabled', 'true', 'boolean', 'Enable/disable delivery schedule banner'),
+  ('banner_payday_enabled', 'true', 'boolean', 'Enable/disable payday specials banner')
 ON CONFLICT (id) DO NOTHING;
 
 -- Create function to check if discount is active

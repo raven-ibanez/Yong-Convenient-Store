@@ -12,7 +12,7 @@ export interface Category {
   updated_at: string;
 }
 
-export const useCategories = () => {
+export const useCategories = (includeInactive: boolean = false) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,11 +21,16 @@ export const useCategories = () => {
     try {
       setLoading(true);
       
-      const { data, error: fetchError } = await supabase
+      let query = supabase
         .from('categories')
-        .select('*')
-        .eq('active', true)
-        .order('sort_order', { ascending: true });
+        .select('*');
+      
+      // Only filter by active status if includeInactive is false
+      if (!includeInactive) {
+        query = query.eq('active', true);
+      }
+      
+      const { data, error: fetchError } = await query.order('sort_order', { ascending: true });
 
       if (fetchError) throw fetchError;
 

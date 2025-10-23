@@ -41,7 +41,20 @@ export const useSiteSettings = () => {
         promo_payday_subtitle: data.find(s => s.id === 'promo_payday_subtitle')?.value || 'FREE DELIVERY',
         promo_payday_code: data.find(s => s.id === 'promo_payday_code')?.value || 'SAHODNASEP',
         promo_payday_dates: data.find(s => s.id === 'promo_payday_dates')?.value || 'on September 15 and 30, 2025 with a min. spend of P3,000',
-        promo_payday_min_purchase: data.find(s => s.id === 'promo_payday_min_purchase')?.value || 'P3,000'
+        promo_payday_min_purchase: data.find(s => s.id === 'promo_payday_min_purchase')?.value || 'P3,000',
+        // Banner visibility toggles (check if setting exists, default to true if not)
+        banner_pickup_enabled: (() => {
+          const setting = data.find(s => s.id === 'banner_pickup_enabled');
+          return setting ? setting.value === 'true' : true;
+        })(),
+        banner_delivery_enabled: (() => {
+          const setting = data.find(s => s.id === 'banner_delivery_enabled');
+          return setting ? setting.value === 'true' : true;
+        })(),
+        banner_payday_enabled: (() => {
+          const setting = data.find(s => s.id === 'banner_payday_enabled');
+          return setting ? setting.value === 'true' : true;
+        })()
       };
 
       setSiteSettings(settings);
@@ -73,23 +86,73 @@ export const useSiteSettings = () => {
     }
   };
 
+  const insertBannerSettings = async () => {
+    try {
+      setError(null);
+      console.log('Inserting banner settings...');
+
+      const bannerSettings = [
+        {
+          id: 'banner_pickup_enabled',
+          value: 'true',
+          type: 'boolean',
+          description: 'Enable/disable pickup promotional banner'
+        },
+        {
+          id: 'banner_delivery_enabled',
+          value: 'true',
+          type: 'boolean',
+          description: 'Enable/disable delivery schedule banner'
+        },
+        {
+          id: 'banner_payday_enabled',
+          value: 'true',
+          type: 'boolean',
+          description: 'Enable/disable payday specials banner'
+        }
+      ];
+
+      for (const setting of bannerSettings) {
+        const { error } = await supabase
+          .from('site_settings')
+          .upsert(setting, { onConflict: 'id' });
+        
+        if (error) {
+          console.error(`Error inserting ${setting.id}:`, error);
+          throw new Error(`Failed to insert ${setting.id}: ${error.message}`);
+        }
+      }
+      
+      // Refresh the settings
+      await fetchSiteSettings();
+      console.log('Banner settings inserted successfully!');
+    } catch (err) {
+      console.error('Error inserting banner settings:', err);
+      setError(err instanceof Error ? err.message : 'Failed to insert banner settings');
+      throw err;
+    }
+  };
+
   const updateSiteSettings = async (updates: Partial<SiteSettings>) => {
     try {
       setError(null);
 
-      const updatePromises = Object.entries(updates).map(([key, value]) =>
-        supabase
+      const updatePromises = Object.entries(updates).map(([key, value]) => {
+        // Convert boolean values to strings for database storage
+        const stringValue = typeof value === 'boolean' ? value.toString() : value;
+        return supabase
           .from('site_settings')
-          .update({ value })
-          .eq('id', key)
-      );
+          .update({ value: stringValue })
+          .eq('id', key);
+      });
 
       const results = await Promise.all(updatePromises);
       
       // Check for errors
       const errors = results.filter(result => result.error);
       if (errors.length > 0) {
-        throw new Error('Some updates failed');
+        console.error('Update errors:', errors);
+        throw new Error(`Some updates failed: ${errors.map(e => e.error?.message).join(', ')}`);
       }
 
       // Refresh the settings
@@ -111,6 +174,7 @@ export const useSiteSettings = () => {
     error,
     updateSiteSetting,
     updateSiteSettings,
+    insertBannerSettings,
     refetch: fetchSiteSettings
   };
 };

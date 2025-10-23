@@ -89,4 +89,8 @@ export interface SiteSettings {
   promo_payday_code: string;
   promo_payday_dates: string;
   promo_payday_min_purchase: string;
+  // Banner visibility toggles
+  banner_pickup_enabled: boolean;
+  banner_delivery_enabled: boolean;
+  banner_payday_enabled: boolean;
 }

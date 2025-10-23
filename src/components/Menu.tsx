@@ -203,53 +203,61 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
   return (
     <main className="px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
         {/* Promotional Banners Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
-          {/* Main Promo Banner - Pickup Highlight */}
-          <div className="lg:col-span-2">
-            <PromoBanner
-              title={siteSettings?.promo_pickup_title || "PICK-UP HIGHLIGHT"}
-              subtitle={siteSettings?.promo_pickup_subtitle || "GET P200 OFF WHEN YOU PICK UP YOUR ORDER!"}
-              code={siteSettings?.promo_pickup_code || "PICKUPSEPTEMBER"}
-              promoDates={siteSettings?.promo_pickup_dates || "September 15 & 30"}
-              minPurchase={siteSettings?.promo_pickup_min_purchase || "P1,500"}
-              bgColor="bg-orange-500"
-              textColor="text-white"
-              image={
-                <div className="flex items-center space-x-2 lg:space-x-4">
-                  <Package className="h-16 w-16 lg:h-32 lg:w-32" />
-                  <ShoppingCart className="h-16 w-16 lg:h-32 lg:w-32" />
-                </div>
-              }
-              className="h-full"
-            />
-          </div>
+        {(siteSettings?.banner_pickup_enabled || siteSettings?.banner_delivery_enabled) && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 mb-6 lg:mb-8">
+            {/* Main Promo Banner - Pickup Highlight */}
+            {siteSettings?.banner_pickup_enabled && (
+              <div className="lg:col-span-2">
+                <PromoBanner
+                  title={siteSettings?.promo_pickup_title || "PICK-UP HIGHLIGHT"}
+                  subtitle={siteSettings?.promo_pickup_subtitle || "GET P200 OFF WHEN YOU PICK UP YOUR ORDER!"}
+                  code={siteSettings?.promo_pickup_code || "PICKUPSEPTEMBER"}
+                  promoDates={siteSettings?.promo_pickup_dates || "September 15 & 30"}
+                  minPurchase={siteSettings?.promo_pickup_min_purchase || "P1,500"}
+                  bgColor="bg-orange-500"
+                  textColor="text-white"
+                  image={
+                    <div className="flex items-center space-x-2 lg:space-x-4">
+                      <Package className="h-16 w-16 lg:h-32 lg:w-32" />
+                      <ShoppingCart className="h-16 w-16 lg:h-32 lg:w-32" />
+                    </div>
+                  }
+                  className="h-full"
+                />
+              </div>
+            )}
 
-          {/* Delivery Schedule */}
-          <div className="space-y-3 lg:space-y-4">
-            <PromoBanner
-              title={siteSettings?.promo_delivery_title || "Delivery Schedule"}
-              subtitle={siteSettings?.promo_delivery_subtitle || "Orders received before 11am Same Day Delivery"}
-              bgColor="bg-blue-500"
-              textColor="text-white"
-              image={<Truck className="h-12 w-12 lg:h-24 lg:w-24" />}
-              className="text-sm"
-            />
+            {/* Delivery Schedule */}
+            {siteSettings?.banner_delivery_enabled && (
+              <div className="space-y-3 lg:space-y-4">
+                <PromoBanner
+                  title={siteSettings?.promo_delivery_title || "Delivery Schedule"}
+                  subtitle={siteSettings?.promo_delivery_subtitle || "Orders received before 11am Same Day Delivery"}
+                  bgColor="bg-blue-500"
+                  textColor="text-white"
+                  image={<Truck className="h-12 w-12 lg:h-24 lg:w-24" />}
+                  className="text-sm"
+                />
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Payday Specials Banner */}
-        <div className="mb-6 lg:mb-8">
-          <PromoBanner
-            title={siteSettings?.promo_payday_title || "PAYDAY SPECIALS"}
-            subtitle={siteSettings?.promo_payday_subtitle || "FREE DELIVERY"}
-            code={siteSettings?.promo_payday_code || "SAHODNASEP"}
-            promoDates={siteSettings?.promo_payday_dates || "on September 15 and 30, 2025 with a min. spend of P3,000"}
-            bgColor="bg-red-600"
-            textColor="text-white"
-            image={<ShoppingBag className="h-16 w-16 lg:h-32 lg:w-32" />}
-            className="w-full"
-          />
-        </div>
+        {siteSettings?.banner_payday_enabled && (
+          <div className="mb-6 lg:mb-8">
+            <PromoBanner
+              title={siteSettings?.promo_payday_title || "PAYDAY SPECIALS"}
+              subtitle={siteSettings?.promo_payday_subtitle || "FREE DELIVERY"}
+              code={siteSettings?.promo_payday_code || "SAHODNASEP"}
+              promoDates={siteSettings?.promo_payday_dates || "on September 15 and 30, 2025 with a min. spend of P3,000"}
+              bgColor="bg-red-600"
+              textColor="text-white"
+              image={<ShoppingBag className="h-16 w-16 lg:h-32 lg:w-32" />}
+              className="w-full"
+            />
+          </div>
+        )}
 
         {/* Featured Categories Preview */}
         <div className="mb-6 lg:mb-8">
