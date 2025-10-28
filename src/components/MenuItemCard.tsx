@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { Plus, Minus, X, ShoppingCart } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import { formatPrice, formatNumber } from '../utils/priceFormatter';
@@ -16,6 +17,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   quantity, 
   onUpdateQuantity 
 }) => {
+  const { siteSettings } = useSiteSettings();
   const [showCustomization, setShowCustomization] = useState(false);
   const [showQuantityPopup, setShowQuantityPopup] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
@@ -276,11 +278,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               </div>
 
               {/* Wholesale Note */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
-                <p className="text-sm text-blue-800 text-center">
-                  <span className="font-medium">Note:</span> For the Wholesale Price and Bulk Order Price, Please contact the General Manager.
-                </p>
-              </div>
+              {siteSettings?.pricing_note && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
+                  <p className="text-sm text-blue-800 text-center">
+                    <span className="font-medium">Note:</span> {siteSettings.pricing_note}
+                  </p>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex space-x-3">

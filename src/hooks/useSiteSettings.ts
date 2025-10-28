@@ -54,7 +54,9 @@ export const useSiteSettings = () => {
         banner_payday_enabled: (() => {
           const setting = data.find(s => s.id === 'banner_payday_enabled');
           return setting ? setting.value === 'true' : true;
-        })()
+        })(),
+        // Pricing note (optional)
+        pricing_note: data.find(s => s.id === 'pricing_note')?.value || 'Note: For the Wholesale Price and Bulk Order Price, Please contact the General Manager.'
       };
 
       setSiteSettings(settings);
@@ -109,6 +111,13 @@ export const useSiteSettings = () => {
           value: 'true',
           type: 'boolean',
           description: 'Enable/disable payday specials banner'
+        },
+        // Ensure pricing_note exists as well
+        {
+          id: 'pricing_note',
+          value: 'Note: For the Wholesale Price and Bulk Order Price, Please contact the General Manager.',
+          type: 'text',
+          description: 'Informational pricing note displayed to customers'
         }
       ];
 

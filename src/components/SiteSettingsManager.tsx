@@ -31,7 +31,8 @@ const SiteSettingsManager: React.FC = () => {
     // Banner visibility toggles
     banner_pickup_enabled: true,
     banner_delivery_enabled: true,
-    banner_payday_enabled: true
+    banner_payday_enabled: true,
+    pricing_note: ''
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
@@ -62,7 +63,8 @@ const SiteSettingsManager: React.FC = () => {
         // Banner visibility toggles
         banner_pickup_enabled: siteSettings.banner_pickup_enabled,
         banner_delivery_enabled: siteSettings.banner_delivery_enabled,
-        banner_payday_enabled: siteSettings.banner_payday_enabled
+        banner_payday_enabled: siteSettings.banner_payday_enabled,
+        pricing_note: siteSettings.pricing_note
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -127,7 +129,8 @@ const SiteSettingsManager: React.FC = () => {
         // Banner visibility toggles
         banner_pickup_enabled: formData.banner_pickup_enabled,
         banner_delivery_enabled: formData.banner_delivery_enabled,
-        banner_payday_enabled: formData.banner_payday_enabled
+        banner_payday_enabled: formData.banner_payday_enabled,
+        pricing_note: formData.pricing_note
       });
 
       setIsEditing(false);
@@ -167,6 +170,9 @@ const SiteSettingsManager: React.FC = () => {
         promo_payday_code: siteSettings.promo_payday_code,
         promo_payday_dates: siteSettings.promo_payday_dates,
         promo_payday_min_purchase: siteSettings.promo_payday_min_purchase
+        ,
+        // Banner visibility toggles are restored by default controls
+        pricing_note: siteSettings.pricing_note
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -416,6 +422,26 @@ const SiteSettingsManager: React.FC = () => {
               <div className="text-gray-600 whitespace-pre-line">{siteSettings?.footer_business_hours}</div>
             )}
           </div>
+        </div>
+
+        {/* Pricing Note */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Pricing Note</h3>
+          <p className="text-sm text-gray-500 mb-3">Shown to customers where implemented (e.g., product pages). Use for wholesale/bulk order instructions.</p>
+          {isEditing ? (
+            <textarea
+              name="pricing_note"
+              value={formData.pricing_note}
+              onChange={handleInputChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="Enter the pricing note customers should see"
+            />
+          ) : (
+            <div className="text-blue-700 bg-blue-50 px-4 py-3 rounded-lg border border-blue-200">
+              <span className="font-semibold">Note:</span> {siteSettings?.pricing_note}
+            </div>
+          )}
         </div>
 
         {/* Promotional Banners */}

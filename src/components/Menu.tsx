@@ -92,6 +92,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
         }));
         
         return fallbackWithCounts
+          .filter(category => (category?.count || 0) > 0)
           .sort((a, b) => (b?.count || 0) - (a?.count || 0))
           .slice(0, 4);
       }
@@ -117,8 +118,9 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
       console.log('Categories with counts:', categoriesWithCounts);
 
-      // Sort by item count (descending) and take top 4
+      // Filter out categories with 0 items, then sort by item count (descending) and take top 4
       const featured = categoriesWithCounts
+        .filter(category => (category?.count || 0) > 0)
         .sort((a, b) => (b?.count || 0) - (a?.count || 0))
         .slice(0, 4);
 
@@ -338,6 +340,16 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               {menuItems.length} product{menuItems.length !== 1 ? 's' : ''} available
             </div>
           </div>
+          {/* Pricing Note */}
+          {siteSettings?.pricing_note && (
+            <div className="mb-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-sm text-blue-800 text-center">
+                  <span className="font-semibold">Note:</span> {siteSettings.pricing_note}
+                </p>
+              </div>
+            </div>
+          )}
           
           {menuItems.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">

@@ -119,7 +119,9 @@ INSERT INTO site_settings (id, value, type, description) VALUES
   -- Banner visibility toggles
   ('banner_pickup_enabled', 'true', 'boolean', 'Enable/disable pickup promotional banner'),
   ('banner_delivery_enabled', 'true', 'boolean', 'Enable/disable delivery schedule banner'),
-  ('banner_payday_enabled', 'true', 'boolean', 'Enable/disable payday specials banner')
+  ('banner_payday_enabled', 'true', 'boolean', 'Enable/disable payday specials banner'),
+  -- Pricing note shown on product pages
+  ('pricing_note', 'Note: For the Wholesale Price and Bulk Order Price, Please contact the General Manager.', 'text', 'Informational pricing note displayed to customers')
 ON CONFLICT (id) DO NOTHING;
 
 -- Create function to check if discount is active
