@@ -32,6 +32,8 @@ const SiteSettingsManager: React.FC = () => {
     banner_pickup_enabled: true,
     banner_delivery_enabled: true,
     banner_payday_enabled: true,
+    facebook_url: '',
+    facebook_enabled: false,
     pricing_note: ''
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -64,6 +66,8 @@ const SiteSettingsManager: React.FC = () => {
         banner_pickup_enabled: siteSettings.banner_pickup_enabled,
         banner_delivery_enabled: siteSettings.banner_delivery_enabled,
         banner_payday_enabled: siteSettings.banner_payday_enabled,
+        facebook_url: siteSettings.facebook_url,
+        facebook_enabled: siteSettings.facebook_enabled,
         pricing_note: siteSettings.pricing_note
       });
       setLogoPreview(siteSettings.site_logo);
@@ -130,6 +134,8 @@ const SiteSettingsManager: React.FC = () => {
         banner_pickup_enabled: formData.banner_pickup_enabled,
         banner_delivery_enabled: formData.banner_delivery_enabled,
         banner_payday_enabled: formData.banner_payday_enabled,
+        facebook_url: formData.facebook_url,
+        facebook_enabled: formData.facebook_enabled,
         pricing_note: formData.pricing_note
       });
 
@@ -169,9 +175,10 @@ const SiteSettingsManager: React.FC = () => {
         promo_payday_subtitle: siteSettings.promo_payday_subtitle,
         promo_payday_code: siteSettings.promo_payday_code,
         promo_payday_dates: siteSettings.promo_payday_dates,
-        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase
-        ,
+        promo_payday_min_purchase: siteSettings.promo_payday_min_purchase,
         // Banner visibility toggles are restored by default controls
+        facebook_url: siteSettings.facebook_url,
+        facebook_enabled: siteSettings.facebook_enabled,
         pricing_note: siteSettings.pricing_note
       });
       setLogoPreview(siteSettings.site_logo);
@@ -442,6 +449,48 @@ const SiteSettingsManager: React.FC = () => {
               <span className="font-semibold">Note:</span> {siteSettings?.pricing_note}
             </div>
           )}
+        </div>
+
+        {/* Facebook Settings */}
+        <div className="border-t pt-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Facebook Settings</h3>
+          
+          <div className="space-y-4">
+            {/* Facebook Enable Toggle */}
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                name="facebook_enabled"
+                checked={formData.facebook_enabled}
+                onChange={handleInputChange}
+                className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+              />
+              <label className="text-sm font-medium text-gray-700">
+                Show Facebook Link
+              </label>
+            </div>
+            
+            {/* Facebook URL */}
+            {formData.facebook_enabled && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Facebook Page URL
+                </label>
+                {isEditing ? (
+                  <input
+                    type="url"
+                    name="facebook_url"
+                    value={formData.facebook_url}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="https://facebook.com/yourpage"
+                  />
+                ) : (
+                  <div className="text-gray-600">{siteSettings?.facebook_url || 'Not set'}</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Promotional Banners */}

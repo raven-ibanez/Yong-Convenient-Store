@@ -120,6 +120,9 @@ INSERT INTO site_settings (id, value, type, description) VALUES
   ('banner_pickup_enabled', 'true', 'boolean', 'Enable/disable pickup promotional banner'),
   ('banner_delivery_enabled', 'true', 'boolean', 'Enable/disable delivery schedule banner'),
   ('banner_payday_enabled', 'true', 'boolean', 'Enable/disable payday specials banner'),
+  -- Facebook settings
+  ('facebook_url', 'https://facebook.com', 'text', 'Facebook page URL'),
+  ('facebook_enabled', 'false', 'boolean', 'Enable/disable Facebook link display'),
   -- Pricing note shown on product pages
   ('pricing_note', 'Note: For the Wholesale Price and Bulk Order Price, Please contact the General Manager.', 'text', 'Informational pricing note displayed to customers')
 ON CONFLICT (id) DO NOTHING;

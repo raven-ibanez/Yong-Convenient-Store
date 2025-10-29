@@ -93,6 +93,9 @@ export interface SiteSettings {
   banner_pickup_enabled: boolean;
   banner_delivery_enabled: boolean;
   banner_payday_enabled: boolean;
+  // Facebook settings
+  facebook_url: string;
+  facebook_enabled: boolean;
   // Pricing note
   pricing_note: string;
 }

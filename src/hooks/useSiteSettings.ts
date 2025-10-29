@@ -55,6 +55,12 @@ export const useSiteSettings = () => {
           const setting = data.find(s => s.id === 'banner_payday_enabled');
           return setting ? setting.value === 'true' : true;
         })(),
+        // Facebook settings
+        facebook_url: data.find(s => s.id === 'facebook_url')?.value || 'https://facebook.com',
+        facebook_enabled: (() => {
+          const setting = data.find(s => s.id === 'facebook_enabled');
+          return setting ? setting.value === 'true' : false;
+        })(),
         // Pricing note (optional)
         pricing_note: data.find(s => s.id === 'pricing_note')?.value || 'Note: For the Wholesale Price and Bulk Order Price, Please contact the General Manager.'
       };
@@ -111,6 +117,19 @@ export const useSiteSettings = () => {
           value: 'true',
           type: 'boolean',
           description: 'Enable/disable payday specials banner'
+        },
+        // Ensure Facebook settings exist as well
+        {
+          id: 'facebook_url',
+          value: 'https://facebook.com',
+          type: 'text',
+          description: 'Facebook page URL'
+        },
+        {
+          id: 'facebook_enabled',
+          value: 'false',
+          type: 'boolean',
+          description: 'Enable/disable Facebook link display'
         },
         // Ensure pricing_note exists as well
         {

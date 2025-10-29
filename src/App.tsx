@@ -94,7 +94,7 @@ function MainApp() {
         setSelectedCategory(categories[0].id);
       }
     }
-  }, [categories, selectedCategory, searchTerm]);
+  }, [categories, searchTerm]); // Removed selectedCategory from dependencies to prevent infinite loop
 
   // Filter products based on selected category and search term
   let filteredMenuItems = menuItems;

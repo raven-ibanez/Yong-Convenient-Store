@@ -331,7 +331,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
                 {searchTerm 
                   ? `Search Results for "${searchTerm}"` 
                   : selectedCategory === 'all' 
-                    ? 'All Products'
+                    ? 'All Categories & Products'
                     : `Products in ${categories.find(cat => cat.id === selectedCategory)?.name || 'Category'}`
                 }
               </h3>
@@ -352,32 +352,115 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           )}
           
           {menuItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-              {menuItems.map((item) => {
-                // Find cart items that match this menu item (base item without variations/add-ons)
-                const matchingCartItems = cartItems.filter(cartItem => 
-                  cartItem.id.startsWith(item.id + '-')
-                );
-                // Calculate total quantity for this item across all variations
-                const totalQuantity = matchingCartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
-                
-                return (
-                  <MenuItemCard
-                    key={item.id}
-                    item={item}
-                    onAddToCart={addToCart}
-                    quantity={totalQuantity}
-                    onUpdateQuantity={(id, quantity) => {
-                      // Find the first matching cart item to update
-                      const cartItem = matchingCartItems[0];
-                      if (cartItem) {
-                        updateQuantity(cartItem.id, quantity);
-                      }
-                    }}
-                  />
-                );
-              })}
-            </div>
+            selectedCategory === 'all' ? (
+              // Grouped view for "View All Categories"
+              <div className="space-y-8">
+                {categories.length > 0 ? (
+                  categories
+                    .filter(category => {
+                      // Only show categories that have items
+                      return menuItems.some(item => item.category === category.id);
+                    })
+                    .map((category) => {
+                    const categoryItems = menuItems.filter(item => item.category === category.id);
+                    
+                    return (
+                      <div key={category.id} className="space-y-4">
+                        {/* Category Header */}
+                        <div className="flex items-center space-x-3 pb-2 border-b border-gray-200">
+                          <span className="text-2xl">{category.icon}</span>
+                          <h4 className="text-xl font-semibold text-gray-900">{category.name}</h4>
+                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                            {categoryItems.length} {categoryItems.length === 1 ? 'item' : 'items'}
+                          </span>
+                        </div>
+                        
+                        {/* Category Items */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+                          {categoryItems.map((item) => {
+                            // Find cart items that match this menu item (base item without variations/add-ons)
+                            const matchingCartItems = cartItems.filter(cartItem => 
+                              cartItem.id.startsWith(item.id + '-')
+                            );
+                            // Calculate total quantity for this item across all variations
+                            const totalQuantity = matchingCartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
+                            
+                            return (
+                              <MenuItemCard
+                                key={item.id}
+                                item={item}
+                                onAddToCart={addToCart}
+                                quantity={totalQuantity}
+                                onUpdateQuantity={(id, quantity) => {
+                                  // Find the first matching cart item to update
+                                  const cartItem = matchingCartItems[0];
+                                  if (cartItem) {
+                                    updateQuantity(cartItem.id, quantity);
+                                  }
+                                }}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  // Fallback: show all items in a single grid if no categories
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+                    {menuItems.map((item) => {
+                      const matchingCartItems = cartItems.filter(cartItem => 
+                        cartItem.id.startsWith(item.id + '-')
+                      );
+                      const totalQuantity = matchingCartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
+                      
+                      return (
+                        <MenuItemCard
+                          key={item.id}
+                          item={item}
+                          onAddToCart={addToCart}
+                          quantity={totalQuantity}
+                          onUpdateQuantity={(id, quantity) => {
+                            const cartItem = matchingCartItems[0];
+                            if (cartItem) {
+                              updateQuantity(cartItem.id, quantity);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Single category view
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+                {menuItems.map((item) => {
+                  // Find cart items that match this menu item (base item without variations/add-ons)
+                  const matchingCartItems = cartItems.filter(cartItem => 
+                    cartItem.id.startsWith(item.id + '-')
+                  );
+                  // Calculate total quantity for this item across all variations
+                  const totalQuantity = matchingCartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
+                  
+                  return (
+                    <MenuItemCard
+                      key={item.id}
+                      item={item}
+                      onAddToCart={addToCart}
+                      quantity={totalQuantity}
+                      onUpdateQuantity={(id, quantity) => {
+                        // Find the first matching cart item to update
+                        const cartItem = matchingCartItems[0];
+                        if (cartItem) {
+                          updateQuantity(cartItem.id, quantity);
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )
           ) : (
             <div className="text-center py-8 lg:py-12">
               {searchTerm ? (
